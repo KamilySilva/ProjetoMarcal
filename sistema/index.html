@@ -135,15 +135,13 @@
   
     <script>
   
-      //const baseUrl = "http://localhost:3000"
-      //Não consegui tornar as rotas a seguir funcionais com postgres, continuarei tentando após o prazo
-
-      const baseUrl = "https://649a1d4a79fbe9bcf8404b5a.mockapi.io"
+      const baseUrl = "http://localhost:3000"
+    
       getDados();
 
       async function addProduto() {
         const inputCategoria = document.querySelector("#inputCategoria");
-        const inputNome = document.querySelector("#inputNome");
+        const inputNome = document.querySelector("#inputNome")
         const inputPreco = document.querySelector("#inputPreco");
         const inputDescricao = document.querySelector("#inputDescricao");
         const dados = {
@@ -154,7 +152,7 @@
         }
 
         try {
-          await fetch(baseUrl + "/users/20201214010001/products", {
+          await fetch(baseUrl + "/produtos", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
@@ -165,7 +163,7 @@
           console.log(error)
         }
   
-        //Limpar dados
+        //Limpar dados 
         inputCategoria.value = "";
         inputNome.value = "";
         inputPreco.value = "";
@@ -210,7 +208,7 @@
       async function getDados(){
 
         try {
-          const response = await fetch(baseUrl + "/users/20201214010001/products");
+          const response = await fetch(baseUrl + "/listarProdutos");
           const data = await response.json();
           exibirDados(data);
         } catch (error) {
@@ -228,7 +226,7 @@
           if (filtro.value == "")
             getDados();
           else {
-            const response = await fetch(baseUrl + "/users/20201214010001/products/?nome=" + filtro.value);
+            const response = await fetch(baseUrl + "/listarProduto" + filtro.value);
             const data = await response.json();
             exibirDados(data);
           }
@@ -248,7 +246,7 @@
         btnRemover.addEventListener("click", async () => {
 
           try {
-            await fetch(baseUrl + "/users/20201214010001/products/" + index, { method: "DELETE" });
+            await fetch(baseUrl + "/deletarProduto" + index, { method: "DELETE" });
             modalRemover.hide();
             exibirDados(agenda);
           } catch (error) {
@@ -266,7 +264,7 @@
         const editDescricao = document.querySelector("#editDescricao");
 
         try {
-          const response = await fetch(baseUrl + "/users/20201214010001/products/" + index);
+          const response = await fetch(baseUrl + "/editarProduto" + index);
           const data = await response.json();
           editCategoria.value = data.categoria;
           editNome.value = data.nome;
@@ -289,7 +287,7 @@
           };
 
           try {
-            const response = await fetch(baseUrl + "/users/20201214010001/products/" + index, {
+            const response = await fetch(baseUrl + "/editarProduto" + index, {
               method: "PUT",
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(dado)

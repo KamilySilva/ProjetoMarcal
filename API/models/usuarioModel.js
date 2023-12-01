@@ -9,9 +9,9 @@ class usuarioModel {
   }
 
   async addProduto(categoria, nome, preco, descricao) {
-    const conexao = await bancoDeDados.conectar();
-    const sql =
-      "INSERT INTO produtos (categoria, nome, preco, descricao) VALUES ($1, $2, $3,$4)";
+    const conexao = await conexaoBancoDeDados.conectar();
+    const sql = 
+      "INSERT INTO produtos (categoria, nome, preco, descricao) VALUES ($1, $2, $3, $4)";
     return await conexao.query(sql, [categoria, nome, preco, descricao]);
   }
 
@@ -24,15 +24,15 @@ class usuarioModel {
 
   async buscarProduto(nome) {
     const conexao = await conexaoBancoDeDados.conectar();
-    const comandoSql = "SELECT * FROM cardapio WHERE nome = ($1)";
+    const comandoSql = "SELECT * FROM produtos WHERE nome = ($2)";
     const produto = await conexao.query(comandoSql, [nome]);
     return produto.rows;
   }
   
-  async deletarProduto(nomeDoProduto) {
+  async deletarProduto(nome) {
     const conexao = await conexaoBancoDeDados.conectar();
-    const comandoSql = "DELETE FROM produtos WHERE nome = ($1)";
-    const resp = await conexao.query(comandoSql, [nomeDoProduto]);
+    const comandoSql = "DELETE FROM produtos WHERE nome = ($2)";
+    const resp = await conexao.query(comandoSql, [nome]);
     return resp;
   }
   
@@ -41,10 +41,10 @@ class usuarioModel {
     const comandoSql =
       "UPDATE produtos SET categoria = ($1), preco = ($3), descricao = ($4) WHERE nome = ($2)";
     return await conexao.query(comandoSql, [
-      novaCategoria,
-      novoPreco,
-      novaDescricao,
+      categoria,
       nome,
+      preco,
+      descricao
     ]);
   }
 }
