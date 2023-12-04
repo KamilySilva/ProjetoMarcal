@@ -238,7 +238,7 @@
   
       }
   
-      async function removerDados(index){
+      async function removerDados(id){
 
         const modalRemover = new bootstrap.Modal('#modalRemover');
         modalRemover.show();
@@ -246,7 +246,7 @@
         btnRemover.addEventListener("click", async () => {
 
           try {
-            await fetch(baseUrl + "/deletarProduto" + index, { method: "DELETE" });
+            await fetch(baseUrl + "/deletarProduto/" + id, { method: "DELETE" });
             modalRemover.hide();
             exibirDados(agenda);
           } catch (error) {

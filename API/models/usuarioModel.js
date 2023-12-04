@@ -22,17 +22,17 @@ class usuarioModel {
     return listaProdutos.rows;
   }
 
-  async buscarProduto(nome) {
+  async buscarProduto(id) {
     const conexao = await conexaoBancoDeDados.conectar();
-    const comandoSql = "SELECT * FROM produtos WHERE nome = ($2)";
-    const produto = await conexao.query(comandoSql, [nome]);
+    const comandoSql = "SELECT * FROM produtos WHERE id = ($1)";
+    const produto = await conexao.query(comandoSql, [id]);
     return produto.rows;
   }
   
-  async deletarProduto(nome) {
+  async deletarProduto(id) {
     const conexao = await conexaoBancoDeDados.conectar();
-    const comandoSql = "DELETE FROM produtos WHERE nome = ($2)";
-    const resp = await conexao.query(comandoSql, [nome]);
+    const comandoSql = "DELETE FROM produtos WHERE id = ($1)";
+    const resp = await conexao.query(comandoSql, [id]);
     return resp;
   }
   

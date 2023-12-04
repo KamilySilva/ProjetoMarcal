@@ -29,6 +29,15 @@ class UsuarioController {
     }
   }
 
+  async buscarProduto(req, res) {
+    try {
+      const produtos = await usuarioModel.buscarProduto();
+      res.status(200).json(produtos);
+    } catch (error) {
+      res.status(500).send({ message: `Erro ao buscar produto - ${error}` });
+    }
+  }
+
   async addProduto(req,res) {
     const { categoria, nome, preco, descricao } = req.body;
         try {
@@ -41,8 +50,8 @@ class UsuarioController {
 
   async deletarProduto(req, res) {
     try {
-      const nomeDoProduto = parseInt(req.params.nome);
-      const resp = await usuarioModel.deletarProduto(nomeDoProduto);
+      const idDoProduto = parseInt(req.params.id);
+      const resp = await usuarioModel.deletarProduto(idDoProduto);
       res.status(500).send({ message: "Deletado com sucesso" });
     } catch (error) {
       res.status(500).send({ message: `Erro ao deletar produto - ${error}` });
