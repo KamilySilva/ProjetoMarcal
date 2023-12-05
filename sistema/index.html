@@ -15,7 +15,7 @@
       <div class="container-fluid">
         <span class="navbar-brand mb-0 h1" style="color:antiquewhite; font-size: 30px; font: weight 700; margin:auto">Bom&Barato</span>
       </div>
-      <!--<button type="button" class="btn negrito" style="background-color: #2626e1; color: white; margin-left: 10px" onclick="logout()">Sair</button>-->
+      <button type="button" id="sair" class="btn negrito" style="background-color: #2626e1; color: white; margin-left: 10px" onclick="sair()">Sair</button>
     </nav>
   
     <div id="container">
@@ -219,14 +219,14 @@
       }
 
       async function buscarDados() {
-        const filtro = document.querySelector("#search");
+        const nome = document.querySelector("#search");
   
         try {
 
-          if (filtro.value == "")
+          if (nome == "")
             getDados();
           else {
-            const response = await fetch(baseUrl + "/listarProduto" + filtro.value);
+            const response = await fetch(baseUrl + "/buscarProdutoNome/" + nome);
             const data = await response.json();
             exibirDados(data);
           }
@@ -300,8 +300,8 @@
           }
   
         })
-        
-        function logout() {
+
+        function sair() {
           localStorage.clear();
           window.location.href = '../login.html';
         }
@@ -312,4 +312,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   
   </body>
-  </html>
+</html>

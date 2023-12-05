@@ -28,7 +28,14 @@ class usuarioModel {
     const produto = await conexao.query(comandoSql, [id]);
     return produto.rows;
   }
-  
+
+  async buscarProdutoNome(nome) {
+    const conexao = await conexaoBancoDeDados.conectar();
+    const comandoSql = "SELECT * FROM produtos WHERE nome = ($1)";
+    const produto = await conexao.query(comandoSql, [nome]);
+    return produto.rows;
+  }
+
   async deletarProduto(id) {
     const conexao = await conexaoBancoDeDados.conectar();
     const comandoSql = "DELETE FROM produtos WHERE id = ($1)";

@@ -31,7 +31,18 @@ class UsuarioController {
 
   async buscarProduto(req, res) {
     try {
-      const produtos = await usuarioModel.buscarProduto();
+      const id = parseInt(req.params.id)
+      const produtos = await usuarioModel.buscarProduto(id);
+      res.status(200).json(produtos);
+    } catch (error) {
+      res.status(500).send({ message: `Erro ao buscar produto - ${error}` });
+    }
+  }
+
+  async buscarProdutoNome(req, res) {
+    try {
+      const nome = req.params.nome
+      const produtos = await usuarioModel.buscarProdutoNome(nome);
       res.status(200).json(produtos);
     } catch (error) {
       res.status(500).send({ message: `Erro ao buscar produto - ${error}` });
