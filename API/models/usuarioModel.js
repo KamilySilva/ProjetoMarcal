@@ -31,8 +31,9 @@ class usuarioModel {
 
   async buscarProdutoNome(nome) {
     const conexao = await conexaoBancoDeDados.conectar();
-    const comandoSql = "SELECT * FROM produtos WHERE nome = ($1)";
+    const comandoSql = "SELECT * FROM produtos WHERE nome ILIKE '%'||$1||'%'";
     const produto = await conexao.query(comandoSql, [nome]);
+    console.log('model' + nome)
     return produto.rows;
   }
 
@@ -43,15 +44,16 @@ class usuarioModel {
     return resp;
   }
   
-  async editarProduto(categoria, nome, preco, descricao) {
+  async editarProduto(categoria, nome, preco, descricao, id) {
     const conexao = await conexaoBancoDeDados.conectar();
     const comandoSql =
-      "UPDATE produtos SET categoria = ($1), preco = ($3), descricao = ($4) WHERE nome = ($2)";
+      "UPDATE produtos SET categoria = ($1), nome = ($2), preco = ($3), descricao = ($4) WHERE id = ($5)";
     return await conexao.query(comandoSql, [
       categoria,
       nome,
       preco,
-      descricao
+      descricao,
+      id
     ]);
   }
 }

@@ -70,13 +70,14 @@ class UsuarioController {
   }
 
   async editarProduto(req, res) {
-    const { novaCategoria, nome, novoPreco, novaDescricao } = req.body;
+    const { novaCategoria, novoNome, novoPreco, novaDescricao, id } = req.body;
     try {
       await usuarioModel.editarProduto(
         novaCategoria,
-        nome,
+        novoNome,
         novoPreco,
-        novaDescricao
+        novaDescricao,
+        id
       );
       res.status(200).send({ message: "Produto atualizado!" });
     } catch (error) {

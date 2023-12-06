@@ -11,11 +11,11 @@
 
   </head>
   <body>
-    <nav class="navbar" style="background-color: rgb(255, 2, 2);">
+    <nav class="navbar d-flex flex-column align-items-center" style="background-color: rgb(255, 2, 2);">
       <div class="container-fluid">
         <span class="navbar-brand mb-0 h1" style="color:antiquewhite; font-size: 30px; font: weight 700; margin:auto">Bom&Barato</span>
       </div>
-      <button type="button" id="sair" class="btn negrito" style="background-color: #2626e1; color: white; margin-left: 10px" onclick="sair()">Sair</button>
+      <button type="button" id="sair" class="btn negrito align-self-end" style="background-color: rgb(255, 2, 2); color: white; margin-left: 20px; border: solid 1px white; margin-right: 10px;" onclick="sair()">Sair</button>
     </nav>
   
     <div id="container">
@@ -126,7 +126,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" id="editar" style="background-color: rgb(255, 2, 2); border: 0;">Editar</button>
+            <button type="button" class="btn btn-primary" id="editar" onclick="editar()" style="background-color: rgb(255, 2, 2); border: 0;">Editar</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           </div>
         </div>
@@ -157,7 +157,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
           });
-  
+          location.reload();
         } catch (error) {
           alert("Ocorreu um erro")
           console.log(error)
@@ -188,7 +188,7 @@
               <td>${dado.nome}</td>
               <td>${dado.preco}</td>
               <td>${dado.descricao}</td>
-              <td><i class="bi bi-pencil-square" style="cursor: pointer" onclick="editarDados(${dado.id})"></i></td>
+              <td><i class="bi bi-pencil-square" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#editModal" onclick="preencherCampos('${dado.id}')"></i></td>
               <td><i class="bi bi-trash" style="cursor: pointer" onclick="removerDados(${dado.id})"></i></td>
             </tr>`;
         });
@@ -219,12 +219,12 @@
       }
 
       async function buscarDados() {
-        const nome = document.querySelector("#search");
+        const nome = document.querySelector("#search").value;
   
         try {
 
           if (nome == "")
-            getDados();
+            await getDados();
           else {
             const response = await fetch(baseUrl + "/buscarProdutoNome/" + nome);
             const data = await response.json();
@@ -255,55 +255,60 @@
   
         });
       }
-  
-      async function editarDados(index) {
 
+      let idDoProdutoParaEditar;
+
+      async function preencherCampos(idProduto) {
+        const id = parseInt(idProduto);
+        idDoProdutoParaEditar = id;
         const editCategoria = document.querySelector("#editCategoria");
         const editNome = document.querySelector("#editNome");
         const editPreco = document.querySelector("#editPreco");
         const editDescricao = document.querySelector("#editDescricao");
 
         try {
-          const response = await fetch(baseUrl + "/editarProduto" + index);
+          const response = await fetch(baseUrl + "/buscarProduto/" + id);
           const data = await response.json();
-          editCategoria.value = data.categoria;
-          editNome.value = data.nome;
-          editPreco.value = data.preco;
-          editDescricao.value = data.descricao;
+          editCategoria.value = data[0].categoria;
+          editNome.value = data[0].nome;
+          editPreco.value = data[0].preco;
+          editDescricao.value = data[0].descricao;
         } catch (error) {
-          alert("Ocorreu um erro")
-          console.log(error)
+          alert("Ocorreu um erro " + error);
         }
-  
-        const modalEditar = new bootstrap.Modal('#editModal');
-        modalEditar.show();
-        const editar = document.querySelector("#editar");
-        editar.addEventListener("click", async () => {
-          const dado = {
-            categoria: editCategoria.value,
-            nome: editNome.value,
-            preco: editPreco.value,
-            descricao: editDescricao.value
-          };
+      }
 
-          try {
-            const response = await fetch(baseUrl + "/editarProduto" + index, {
-              method: "PUT",
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(dado)
-            });
-            exibirDados();
-            modalEditar.hide();
-          } catch (error) {
-            alert("Ocorreu um erro")
-            console.log(error)
-          }
-  
-        })
+      function sair() {
+        localStorage.clear();
+        window.location.href = '../login.html';
+      }
 
-        function sair() {
-          localStorage.clear();
-          window.location.href = '../login.html';
+      async function editar() {
+        const novaCategoria = document.querySelector("#editCategoria").value;
+        console.log(novaCategoria);
+        const novoNome = document.querySelector("#editNome").value;
+        const novoPreco = document.querySelector("#editPreco").value;
+        const novaDescricao = document.querySelector("#editDescricao").value;
+
+        try {
+          const resposta = await fetch("http://localhost:3000/editarProduto", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              novaCategoria,
+              novoNome,
+              novoPreco,
+              novaDescricao,
+              id: idDoProdutoParaEditar,
+            }),
+          });
+          const resp = await resposta.json();
+          alert(resp.message);
+          location.reload();
+        } catch (error) {
+          alert("Erro ao editar " + error);
         }
       }
 
